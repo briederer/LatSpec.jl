@@ -1,0 +1,13 @@
+name = "LatSpec"
+uuid = "5648dd92-b909-466b-b6bb-bca0d81a8536"
+authors = ["Bernd Riederer <bernd_riederer@hotmail.com> and Fabian Zierler <fabian.zierler@a1.net>"]
+version = "0.1.0"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
