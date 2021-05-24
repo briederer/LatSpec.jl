@@ -5,3 +5,4 @@ LatSpec = "5648dd92-b909-466b-b6bb-bca0d81a8536"
 
 [compat]
 DocumenterCitations = "0.2"
+Documenter = "0.26"
