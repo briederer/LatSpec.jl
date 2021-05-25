@@ -20,7 +20,7 @@ makedocs(bib;
 )
 
 deploydocs(;
-    repo = "github.com/bernd1995/LatSpec.jl",
+    repo = "github.com/bernd1995/LatSpec.jl.git",
     target = "build",
     push_preview = true
 )
