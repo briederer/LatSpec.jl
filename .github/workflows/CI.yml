@@ -58,7 +58,7 @@ jobs:
           julia --project=docs -e '
             import Pkg; Pkg.add("Documenter")
             using Pkg
-            Pkg.develop(PackageSpec(url="https://www.github.com/bernd1995/LatSpec.jl"))
+            Pkg.develop(Pkg.PackageSpec(path=pwd()))
             Pkg.instantiate()'
       - run: |
           julia --project=docs -e '
