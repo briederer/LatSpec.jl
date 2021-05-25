@@ -2,21 +2,25 @@ using Documenter
 using DocumenterCitations
 using LatSpec
 
-bib = CitationBibliography("LatSpec.bib")
+bib = CitationBibliography(joinpath(@__DIR__,"LatSpec.bib"))
 const PAGES = [
                "Home"       => "index.md",
                "References" => "references.md"
               ]
 
-makedocs(
-    bib,
-    sitename="LatSpec.jl",
+makedocs(bib;
+    authors = "Bernd Riederer and Fabian Zierler",
+    format = Documenter.HTML(;
+        prettyurls = get(ENV, "CI", nothing) == "true",
+        assets=String[],
+    ),
     pages = PAGES,
-    format = Documenter.HTML(prettyurls = get(ENV, "CI", nothing) == "true"),
-    authors = "Bernd Riederer and Fabian Zierler"
+    repo="https://github.com/bernd1995/LatSpec.jl/blob/{commit}{path}#{line}",
+    sitename="LatSpec.jl"
 )
 
-deploydocs(
+deploydocs(;
     repo = "github.com/bernd1995/LatSpec.jl",
-    push_review = true
+    target = "build",
+    push_preview = true
 )
