@@ -4,7 +4,7 @@
 Returns autocorrelation function for a distance of lag, i.e. between values of
 ```x[t]``` and ```x[t+lag]```. The autocorrelation function is normalized such
 that ```autocor(x,0) = 1```. This is equvivalent to the quantity
-``\\Gamma_X(t)`` of equation (4.61) in [GattringerLang](@cite).
+``\\Gamma_X(t)`` of equation (4.61) in [Gattringer/Lang](@cite).
 """
 function autocor(x, lag)
     # (wasteful in terms of allocations but clear)
