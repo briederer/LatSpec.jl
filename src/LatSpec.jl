@@ -8,6 +8,7 @@ include("statistics.jl")
 
 import LsqFit: curve_fit
 import Statistics: mean
+using Plots
 
 export
     theory,
