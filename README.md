@@ -1,10 +1,8 @@
 # LatSpec
 
-- **CI:**  
-  [![Build status](https://github.com/bernd1995/LatSpec.jl/workflows/CI/badge.svg)](https://github.com/bernd1995/LatSpec.jl/actions?query=workflow%3ACI+branch%3Amaster)
+- **CI:** [![Build status](https://github.com/bernd1995/LatSpec.jl/workflows/CI/badge.svg)](https://github.com/bernd1995/LatSpec.jl/actions?query=workflow%3ACI+branch%3Amaster)
 
-- **Coverage:**
-  [![codecov](https://codecov.io/gh/bernd1995/LatSpec.jl/branch/master/graph/badge.svg?token=QDQVBL8B4X)](https://codecov.io/gh/bernd1995/LatSpec.jl)
+- **Coverage:** [![codecov](https://codecov.io/gh/bernd1995/LatSpec.jl/branch/master/graph/badge.svg?token=QDQVBL8B4X)](https://codecov.io/gh/bernd1995/LatSpec.jl)
 
 - **Documentation**: [![][docs-latest-img]][docs-latest-url]
 
