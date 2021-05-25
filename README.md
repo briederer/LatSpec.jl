@@ -1,7 +1,7 @@
 # LatSpec
 
 - **Build & Testing Status:**
-  [![Coverage Status](http://codecov.io/github/JuliaStats/StatsBase.jl/coverage.svg?branch=master)](http://codecov.io/github/JuliaStats/StatsBase.jl?branch=master)
+  [![Coverage Status](https://codecov.io/gh/bernd1995/LatSpec.jl/branch/master/graphs/badge.svg?branch=master)](http://codecov.io/github/bernd1995/LatSpec.jl?branch=master)
 
 - **Documentation**: [![][docs-latest-img]][docs-latest-url]
 
