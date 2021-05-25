@@ -1,6 +1,6 @@
 # LatSpec
 
-- **CI**
+- **CI:**  
   [![Build status](https://github.com/bernd1995/LatSpec.jl/workflows/CI/badge.svg)](https://github.com/bernd1995/LatSpec.jl/actions?query=workflow%3ACI+branch%3Amaster)
 
 - **Coverage:**
