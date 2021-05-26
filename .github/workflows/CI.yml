@@ -54,28 +54,28 @@ jobs:
       - uses: julia-actions/setup-julia@v1
         with:
           version: '1'
-      - name: Instantiate Package
-        run: |
-          julia --project=docs -e '
-            import Pkg; Pkg.add("Documenter")
-            using Pkg
-            Pkg.develop(Pkg.PackageSpec(path=pwd()))
-            Pkg.instantiate()'
-      - name: Test Docs
-        run: |
-          julia --project=docs -e '
-            import Pkg; Pkg.add("Documenter")
-            using Documenter: doctest
-            using LatSpec
-            doctest(LatSpec)'
-      - name: Create and deploy Docs
-        run: julia --project=docs docs/make.jl
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}
+      # - name: Instantiate Package
+      #   run: |
+      #     julia --project=docs -e '
+      #       import Pkg; Pkg.add("Documenter")
+      #       using Pkg
+      #       Pkg.develop(Pkg.PackageSpec(path=pwd()))
+      #       Pkg.instantiate()'
+      # - name: Test Docs
+      #   run: |
+      #     julia --project=docs -e '
+      #       import Pkg; Pkg.add("Documenter")
+      #       using Documenter: doctest
+      #       using LatSpec
+      #       doctest(LatSpec)'
+      # - name: Create and deploy Docs
+      #   run: julia --project=docs docs/make.jl
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}
       - name: Checkout gh-pages branch
         #if: "github.event_name == 'push' &&  contains(github.event.head_commit.message, '#')"
-        run: echo $COMMIT_MSG
+        run: echo "$COMMIT_MSG"
         env:
           COMMIT_MSG: ${{ github.event.head_commit.message }}
       #   if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' }}
