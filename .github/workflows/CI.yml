@@ -75,10 +75,10 @@ jobs:
       #     DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}
       - name: Checkout gh-pages branch
         #if: "github.event_name == 'push' &&  contains(github.event.head_commit.message, '#')"
-        run: echo "${{github.event.commits[0][message]}}"
+        run: echo "${{github.event.commits[][message]}}"
         run: echo "$COMMIT_MSG"
         env:
-          COMMIT_MSG: ${{ github.event.commits[0][message] }}
+          COMMIT_MSG: ${{ github.event.commits[][message] }}
       #   if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' }}
       #   uses: actions/checkout@v2
       #   with:
