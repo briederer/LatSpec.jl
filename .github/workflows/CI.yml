@@ -74,21 +74,25 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}
       - name: Checkout gh-pages branch
-        if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' }}
-        uses: actions/checkout@v2
-        with:
-          ref: gh-pages
-      - name: Cleanup Docs branch
-        if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' }}
-        run: |
-            git config user.name "LatSpec.jl-Documenter"
-            git config user.email "20151553+bernd1995@users.noreply.github.com"
-            git rm -rf "previews/PR$PRNUM"
-            git commit -m "Delete previews"
-            git branch gh-pages-new $(echo "Delete history" | git commit-tree HEAD^{tree})
+        if: "contains(github.event.head_commit.message, '#')"
+        run: echo $COMMIT_MSG
         env:
-          PRNUM: ${{ github.event.number }}
-      - name: Push changes
-        if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' }}
-        run: |
-            git push --force origin gh-pages-new:gh-pages
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+      #   if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' }}
+      #   uses: actions/checkout@v2
+      #   with:
+      #     ref: gh-pages
+      # - name: Cleanup Docs branch
+      #   if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' }}
+      #   run: |
+      #       git config user.name "LatSpec.jl-Documenter"
+      #       git config user.email "20151553+bernd1995@users.noreply.github.com"
+      #       git rm -rf "previews/PR$PRNUM"
+      #       git commit -m "Delete previews"
+      #       git branch gh-pages-new $(echo "Delete history" | git commit-tree HEAD^{tree})
+      #   env:
+      #     PRNUM: ${{ github.event.number }}
+      # - name: Push changes
+      #   if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' }}
+      #   run: |
+      #       git push --force origin gh-pages-new:gh-pages
