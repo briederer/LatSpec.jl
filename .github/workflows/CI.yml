@@ -89,5 +89,6 @@ jobs:
         env:
           PRNUM: ${{ github.event.number }}
       - name: Push changes
+        if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' }}
         run: |
             git push --force origin gh-pages-new:gh-pages
