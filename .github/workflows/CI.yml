@@ -54,19 +54,41 @@ jobs:
       - uses: julia-actions/setup-julia@v1
         with:
           version: '1'
-      - run: |
+      - name: Instantiate Package
+        run: |
           julia --project=docs -e '
             import Pkg; Pkg.add("Documenter")
             using Pkg
             Pkg.develop(Pkg.PackageSpec(path=pwd()))
             Pkg.instantiate()'
-      - run: |
+      - name: Test Docs
+        run: |
           julia --project=docs -e '
             import Pkg; Pkg.add("Documenter")
             using Documenter: doctest
             using LatSpec
             doctest(LatSpec)'
-      - run: julia --project=docs docs/make.jl
+      - name: Create and deploy Docs
+        run: julia --project=docs docs/make.jl
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}
+      - name: Checkout gh-pages branch
+        if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' }}
+        uses: actions/checkout@v2
+        with:
+          ref: gh-pages
+      - name: Cleanup Docs branch
+        if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' }}
+        run: |
+            git config user.name "LatSpec.jl-Documenter"
+            git config user.email "20151553+bernd1995@users.noreply.github.com"
+            git rm -rf "previews/PR$PRNUM"
+            git commit -m "Delete previews"
+            git branch gh-pages-new $(echo "Delete history" | git commit-tree HEAD^{tree})
+        env:
+          PRNUM: ${{ github.event.number }}
+      - name: Push changes
+        if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' }}
+        run: |
+            git push --force origin gh-pages-new:gh-pages
