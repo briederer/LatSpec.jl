@@ -75,7 +75,7 @@ jobs:
       #     DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}
       - name: Checkout gh-pages branch
         #if: "github.event_name == 'push' &&  contains(github.event.head_commit.message, '#')"
-        run: echo "$COMMIT_MSG"
+        run: echo "${{toJSON(github.event)}}"
         env:
           COMMIT_MSG: ${{ github.event.commits[0].message }}
       #   if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' }}
