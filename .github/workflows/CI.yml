@@ -73,16 +73,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}
-      - name: Inform PR about
+      - name: Post Docs-link to PR
         if: ${{ github.event_name == 'pull_request'}}
         uses: mshick/add-pr-comment@v1
         with:
           message: |
             **The Docs for this PR are deployed!** 🥳
-
             You can find them [here](https://bernd1995.github.io/LatSpec.jl/previews/PR${{ github.event.number }}).
+
+            Please make sure that you have documented your new feature properly:
+              - [] Added documentation (if needed).
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          repo-token-user-login: 'github-actions[bot]' # The user.login for temporary GitHub tokens
+          repo-token-user-login: 'github-actions[bot]' 
           allow-repeats: false # This is the default
       - name: Checkout gh-pages branch
         if: "contains(env.COMMIT_MSG, '#')"   # only filled on push not on pr

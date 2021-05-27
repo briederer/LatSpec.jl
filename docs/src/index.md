@@ -5,7 +5,27 @@
 [![Docs-stable](https://img.shields.io/badge/docs-stable-lightgrey.svg)](https://bernd1995.github.io/LatSpec.jl/)
 <!--- ^^ Change the color once there is a release)  --->
 
-Short description goes here
+**LatSpec.jl** is a package for performing spectroscopical analyses for [Lattice Field Theories](https://en.wikipedia.org/wiki/Lattice_field_theory). The package provides functions and suitable for all phases of the analysation process:
+
+ - **Statistics**: calculating autocorrelations, expectation values, ...
+ - **Spectroscopy**: performing variational analysis, extracting masses from correlators, ...
+ - **Output**: representation of data and results(, efficient storing?)
+
+
+ |:exclamation: Attention: this package is in a very early stage :exclamation:|
+ |----------------------------------------------------------------------------|
+
+## Installation
+
+The package can be installed with the Julia package manager (though not yet registered). From the Julia REPL, type `]` to enter the Pkg REPL mode and run:
+
+```julia
+pkg> add https://github.com/bernd1995/LatSpec.jl
+```
+Or, equivalently, via the Pkg API:
+```julia
+julia> import Pkg; Pkg.add(url="https://github.com/bernd1995/LatSpec.jl")
+```
 
 ## Usage
 
@@ -17,7 +37,7 @@ Any special features and examples go here
 
 ## Created by
 
-### Bernd Riederer([@bernd1995](https://github.com/bernd1995))
+### Bernd Riederer ([@bernd1995](https://github.com/bernd1995))
 
 [![Contact-me](https://img.shields.io/badge/@-Contact%20me-009DDC)](mailto:bernd_riederer@hotmail.com?subject=[GitHub]%20LatSpec.jl)
 [![Linktr.ee](https://img.shields.io/badge/-Linktree%20-lightgrey?logo=linktree)](https://linktr.ee/b_riederer)
