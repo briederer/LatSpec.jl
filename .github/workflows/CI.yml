@@ -82,9 +82,9 @@ jobs:
             You can find them [here](https://bernd1995.github.io/LatSpec.jl/previews/PR${{ github.event.number }}).
 
             Please make sure that you have documented your new feature properly:
-              - [] Added documentation (if needed).
+              - [ ] Added documentation (if needed).
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          repo-token-user-login: 'github-actions[bot]' 
+          repo-token-user-login: 'github-actions[bot]'
           allow-repeats: false # This is the default
       - name: Checkout gh-pages branch
         if: "contains(env.COMMIT_MSG, '#')"   # only filled on push not on pr

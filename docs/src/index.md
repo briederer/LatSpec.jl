@@ -3,7 +3,6 @@
 [![codecov](https://codecov.io/gh/bernd1995/LatSpec.jl/branch/master/graph/badge.svg?token=QDQVBL8B4X)](https://codecov.io/gh/bernd1995/LatSpec.jl)
 [![Docs-dev](https://img.shields.io/badge/docs-latest-blue.svg)](https://bernd1995.github.io/LatSpec.jl/dev/)
 [![Docs-stable](https://img.shields.io/badge/docs-stable-lightgrey.svg)](https://bernd1995.github.io/LatSpec.jl/)
-<!--- ^^ Change the color once there is a release)  --->
 
 **LatSpec.jl** is a package for performing spectroscopical analyses for [Lattice Field Theories](https://en.wikipedia.org/wiki/Lattice_field_theory). The package provides functions and suitable for all phases of the analysation process:
 
@@ -12,8 +11,9 @@
  - **Output**: representation of data and results(, efficient storing?)
 
 
- |:exclamation: Attention: this package is in a very early stage :exclamation:|
- |----------------------------------------------------------------------------|
+# **❗️ Warning: This package is in a very early stage ❗️**
+  - The package is neither registered yet, nor really working at this moment.
+  - So just be patient and add [Issues](https://github.com/bernd1995/LatSpec.jl/issues) or [Pull-Requests](https://github.com/bernd1995/LatSpec.jl/pulls) if you want something to be added.
 
 ## Installation
 
@@ -37,7 +37,7 @@ Any special features and examples go here
 
 ## Created by
 
-### Bernd Riederer ([@bernd1995](https://github.com/bernd1995))
+#### Bernd Riederer ([@bernd1995](https://github.com/bernd1995))
 
 [![Contact-me](https://img.shields.io/badge/@-Contact%20me-009DDC)](mailto:bernd_riederer@hotmail.com?subject=[GitHub]%20LatSpec.jl)
 [![Linktr.ee](https://img.shields.io/badge/-Linktree%20-lightgrey?logo=linktree)](https://linktr.ee/b_riederer)
@@ -45,6 +45,6 @@ Any special features and examples go here
 [![Gitlab-b_riederer](https://img.shields.io/badge/GitLab-%40b__riederer-lightgrey?style=social&logo=gitlab)](https://gitlab.com/b_riederer)
 [![Twitter-b_riederer](https://img.shields.io/badge/Twitter-%40b__riederer-lightgrey?style=social&logo=twitter)](https://twitter.com/b_riederer)
 
-### Fabian Zierler ([@fzierler](https://github.com/fzierler))
+#### Fabian Zierler ([@fzierler](https://github.com/fzierler))
 
 [![Contact-me](https://img.shields.io/badge/@-Contact%20me-009DDC)](mailto:fabian.zierler@uni-graz.at?subject=[GitHub]%20LatSpec.jl)
