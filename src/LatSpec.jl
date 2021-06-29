@@ -1,18 +1,23 @@
 module LatSpec
 
+import Base: show, convert
+import LsqFit: curve_fit
+import Statistics: mean
+
+include("datapoint.jl")
 include("parser.jl")
 include("plots.jl")
 include("spectroscopy.jl")
-include("theory.jl")
 include("statistics.jl")
+include("theory.jl")
 
-import LsqFit: curve_fit
-import Statistics: mean
 
 export
     theory,
     theories,
     theory_name
+
+export DataPoint, ±, value, staterr, syserr
 
 const CURRENT_THEORY = CurrentTheory(:none)
 
