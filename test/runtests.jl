@@ -1,6 +1,7 @@
 using LatSpec
 using Test
 
-@testset "LatSpec.jl" begin
+@testset verbose=true "LatSpec.jl" begin
+    include("datapoint.jl")
     include("statistics.jl")
 end
