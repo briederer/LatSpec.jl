@@ -2,17 +2,15 @@
 # Not calling any theory should give warnings when ambigious functions are called
 
 ## General Theory type and default struct
-abstract type AbstractTheory end
-
-struct NoTheory <: AbstractTheory end
+struct UndefTheory <: AbstractTheory end
 
 # for converting type to symbol and back
-const _theoryType = Dict{Symbol, DataType}(:none => NoTheory)
-const _theorySymbol = Dict{DataType, Symbol}(NoTheory => :none)
-# supported theoris
+const _theoryType = Dict{Symbol, DataType}(:undef => UndefTheory)
+const _theorySymbol = Dict{DataType, Symbol}(UndefTheory => :undef)
+# supported theories
 const _theories = Symbol[]
 const _initialized_theories = Set{Symbol}()
-const _default_theories = (:none)
+const _default_theories = (:undef)
 
 # Helper functions to get list of supported theories and current theories
 "Returns a list of supported Theorys"
@@ -31,11 +29,14 @@ macro init_theory(s)
     package_str = string(s)
     str = lowercase(package_str)
     sym = Symbol(str)
-    T = Symbol(string(s) * "Theory")
+    T = Symbol(package_str * "Theory")
+    predef = isdefined(LatSpec,T)
     esc(quote
-        struct $T <: AbstractTheory end
-        export $sym
-        $sym(; kw...) = (#=default(; reset = false, kw...);=# theory($T()))
+        if (!$predef)
+            struct $T <: AbstractTheory end
+            export $sym
+        end
+        $sym(; kw...) = (#=default(; reset = false, kw...);=# theory($T(; kw...)))
         theory_name(::$T) = Symbol($str)
         push!(_theories, Symbol($str))
         _theoryType[Symbol($str)] = $T
@@ -52,7 +53,7 @@ end
 CurrentTheory(sym::Symbol) = CurrentTheory(sym,_theory_instance(sym))
 
 ## Default Theory
-_fallback_default_theory() = theory(:none)
+_fallback_default_theory() = theory(:undef)
 
 function _pick_default_theory()
     env_default = get(ENV, "LATSPEC_DEFAULT_THEORY", "")
@@ -75,7 +76,7 @@ end
 Returns the current theory used for spectroscopy.  Initializes package on first call.
 """
 function theory()
-    if CURRENT_THEORY.sym == :none
+    if CURRENT_THEORY.sym == :undef
         _pick_default_theory()
     end
 
@@ -106,10 +107,10 @@ function theory(sym::Symbol)
 end
 
 ## Init supported theories
-@init_theory none
-@init_theory su2higgs
-@init_theory su3higgs
-@init_theory sp4
+@init_theory Undef
+@init_theory SU2Higgs
+@init_theory SU3Higgs
+@init_theory Sp4
 
 # initialize the theory
 function _initialize_theory(theory::AbstractTheory)
