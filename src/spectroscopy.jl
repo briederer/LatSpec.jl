@@ -31,8 +31,27 @@ value is calculated. In that case the unexported methods
 used for propagation of uncertainty.
 """
 function effectivemass(c::Vector{DataPoint{T}}) where T
-    val = getfield.(c,:val)
-    stat = getfield.(c,:stat)
-    sys = getfield.(c,:sys)
+    # here are some allocations that are not strictly needed
+    val = value.(c)
+    stat = staterr.(c)
+    sys = syserr.(c)
     return DataPoint.(effectivemass(val),effectivemass_err_stat(val,stat),effectivemass_err_sys(val,sys))
+end
+function effectivemass_cosh(c)
+    T = length(c)
+    t = 1:T
+    mid  = div(T,2)+1 # 1-based indexing
+    return @. abs(acosh(c/c[mid])/(mid-t))
+end
+_acoshderiv(x) = 1/sqrt(x^2 + 1)
+function effectivemass_cosh_err(c,Δc;norm=1)
+    T = length(c)
+    mid  = div(T,2) + 1 # 1-based indexing
+    Δm = similar(c)
+    for t in 1:T
+        err1 = _acoshderiv(c[t]/c[mid])*Δc[t]/c[mid]
+        err2 = _acoshderiv(c[t]/c[mid])*c[t]*Δc[mid]/c[mid]^2
+        Δm[t] = LinearAlgebra.norm((err1,err2),norm)/abs(mid-t)
+    end
+    return Δm
 end
