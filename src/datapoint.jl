@@ -4,7 +4,7 @@
     DataPoint(x,stat,sys)
 Parametric type that stores a value and its respective statistical and systematic
 uncertainties. The uncertainties can either be numbers for symmetric uncertainties
-or a tuple for upper and lower bounds. It can be created by either providing
+or a tuple for lower and upper bounds. It can be created by either providing
 positional arguments ( e.g. `DataPoint(1.0,0.1,0.2)` or
 `DataPoint(1.0,(0.09,0.11),(0.21,0.19))`) or using the keyword arguments `stat`
 and `sys` ( e.g. `DataPoint(1.0,stat=0.1,sys=0.2) . If only one uncertainty is
@@ -34,6 +34,10 @@ Returns the systematic uncertainty of the data point as a tuple of upper and
 lower bounds. If none is provided it will default to zero.
 """
 syserr(x::DataPoint) = x.sys_err
+
+relstaterr(x::DataPoint) = x.stat_err / abs(x.val)
+
+statbounds(x::DataPoint) = x.val .+ (-1,1).*x.stat_err
 # Helper functions
 _to_tuple(x::T where T<:Number) = (x,x)
 _to_tuple(x::Tuple) = promote(x...)
@@ -41,7 +45,8 @@ _check_error_positivity(err) = all(x -> (π/2 >= angle(x)>=0), err)
 
 ## Constructors
 # default constructor
-DataPoint() = DataPoint(NaN, (NaN, NaN), (NaN, NaN))
+DataPoint{T}(x = zero(T), stat = (zero(T), zero(T)), sys = (zero(T),zero(T))) where {T} = DataPoint{T}(x, stat, sys)
+DataPoint() = DataPoint{Float64}()
 # dispatch constructor
 DataPoint(x::Number, stat, sys = zero(x)) = DataPoint(x, stat = stat, sys = sys)
 # keyword constructor for integers (ceils uncertainties)
@@ -66,16 +71,21 @@ const ±(val, err::NamedTuple) = DataPoint(val, hasproperty(err,:stat) ? err.sta
 const ±(D::DataPoint, sys) = DataPoint(D.val, D.stat_err, sys)
 
 ## Convert DataPoint-types
-convert(::Type{DataPoint{T}}, D::DataPoint) where {T} = DataPoint{T}(T( D.val),T.(D.stat_err), T.(D.sys_err))
+convert(::Type{DataPoint{T}}, D::DataPoint) where {T} = DataPoint{T}(T(D.val),T.(D.stat_err), T.(D.sys_err))
 convert(::Type{DataPoint{T}}, D::DataPoint) where {T<:Integer} = DataPoint{T}(T(D.val),T.(ceil.(D.stat_err)), T.(ceil.(D.sys_err)))
+
+## DataPoint math
+Base.:/(D::DataPoint, s::T) where {T <: Number} = DataPoint(D.val/s,D.stat_err/s,D.sys_err/s)
+Base.:*(D::DataPoint, s::T) where {T <: Number} = DataPoint(D.val*s,D.stat_err*s,D.sys_err*s)
 
 ## Pretty-printing
 # Printing of results
 function show(io::IO, ::MIME"text/plain", D::DataPoint{T}; drop::Bool = true) where {T}
     println(io, "DataPoint{",T,"}:")
-    print(io, "Value → ", D.val)
-    if (!drop || D.stat_err != (0,0)) print(io, "\tStatistic unc. → ", (1,-1) .* D.stat_err); end
-    if (!drop || D.sys_err != (0,0)) print(io, "\tSystematic unc. → ", (1,-1) .* D.sys_err); end
+    print(io, "Value → ")
+    show(io, D.val)
+    if (!drop || D.stat_err != (0,0)) print(io, "\tStatistic unc. → ", (-1,1) .* D.stat_err); end
+    if (!drop || D.sys_err != (0,0)) print(io, "\tSystematic unc. → ", (-1,1) .* D.sys_err); end
 end
 
 # Print(ln)-function and Juno-Workspace
