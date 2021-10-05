@@ -12,7 +12,7 @@
     # Check Constructors
     # Right hand side should always call the base cosntructor
     @testset verbose=true "DataPoint    " begin
-        @test (local D = DataPoint(); all(isnan.([D.val D.stat_err... D.sys_err...])))
+        @test (local D = DataPoint();  (local D = DataPoint(); all([D.val D.stat_err... D.sys_err...] .≈ 0.0)))
         # Check handling of tuples and numbers as input
         @testset "dispatch    " begin
             # uncertainties are numbers
@@ -112,11 +112,11 @@
         D3 = DataPoint(1.0, sys = (4,5))
 
         print(io, D1)
-        @test String(take!(io)) == "DataPoint{Float64}:\nValue → 1.0\tStatistic unc. → (2.0, -3.0)\tSystematic unc. → (0.0, -0.0)"
+        @test String(take!(io)) == "DataPoint{Float64}:\nValue → 1.0\tStatistic unc. → (-2.0, 3.0)\tSystematic unc. → (-0.0, 0.0)"
         print(io, D2)
-        @test String(take!(io)) == "DataPoint{Float64}:\nValue → 1.0\tStatistic unc. → (2.0, -3.0)\tSystematic unc. → (4.0, -5.0)"
+        @test String(take!(io)) == "DataPoint{Float64}:\nValue → 1.0\tStatistic unc. → (-2.0, 3.0)\tSystematic unc. → (-4.0, 5.0)"
         print(io, D3)
-        @test String(take!(io)) == "DataPoint{Float64}:\nValue → 1.0\tStatistic unc. → (0.0, -0.0)\tSystematic unc. → (4.0, -5.0)"
+        @test String(take!(io)) == "DataPoint{Float64}:\nValue → 1.0\tStatistic unc. → (-0.0, 0.0)\tSystematic unc. → (-4.0, 5.0)"
 
         print(IOContext(io, :compact => true), D1)
         @test String(take!(io)) == "1.0 ± (2.0, 3.0) ± (0.0, 0.0)"
@@ -126,10 +126,10 @@
         @test String(take!(io)) == "1.0 ± (0.0, 0.0) ± (4.0, 5.0)"
 
         show(io, MIME("text/plain"), D1)
-        @test String(take!(io)) == "DataPoint{Float64}:\nValue → 1.0\tStatistic unc. → (2.0, -3.0)"
+        @test String(take!(io)) == "DataPoint{Float64}:\nValue → 1.0\tStatistic unc. → (-2.0, 3.0)"
         show(io, MIME("text/plain"), D2)
-        @test String(take!(io)) == "DataPoint{Float64}:\nValue → 1.0\tStatistic unc. → (2.0, -3.0)\tSystematic unc. → (4.0, -5.0)"
+        @test String(take!(io)) == "DataPoint{Float64}:\nValue → 1.0\tStatistic unc. → (-2.0, 3.0)\tSystematic unc. → (-4.0, 5.0)"
         show(io, MIME("text/plain"), D3)
-        @test String(take!(io)) == "DataPoint{Float64}:\nValue → 1.0\tSystematic unc. → (4.0, -5.0)"
+        @test String(take!(io)) == "DataPoint{Float64}:\nValue → 1.0\tSystematic unc. → (-4.0, 5.0)"
     end
 end
