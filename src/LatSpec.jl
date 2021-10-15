@@ -17,7 +17,7 @@ export
     theories,
     theory_name
 
-export DataPoint, ±, value, staterr, syserr, relstaterr, statbounds
+export DataPoint, ±, value, err, relerr, bounds,otherfun
 
 const CURRENT_THEORY = CurrentTheory(:none)
 
