@@ -12,7 +12,7 @@ other is assumed to be zero.
 
 It can also be created by using the ± symbol, e.g. `x ± err`.
 """
-struct DataPoint{T<:Number} <: Number
+struct DataPoint{T<:Number}
     val::T
     err::Tuple{T,T}
 end
@@ -43,7 +43,7 @@ DataPoint() = DataPoint{Float64}(0.0)
 # keyword constructor for separate errors
 #function DataPoint{T}()
 # keyword constructor for real numbers
-function DataPoint{T}(x::T; err=zero(T)) where {T <: Number}
+function DataPoint{T}(x::T=zero(T); err=zero(T)) where {T <: Number}
     @assert _check_error_positivity(err) "Only use positive uncertainties!"
     err = _to_tuple(err)
     U = promote_type(typeof(x), eltype(err))
