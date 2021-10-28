@@ -12,7 +12,7 @@ other is assumed to be zero.
 
 It can also be created by using the ± symbol, e.g. `x ± err`.
 """
-struct DataPoint{T<:Number}
+struct DataPoint{T<:Number} <: Number
     val::T
     err::Tuple{T,T}
 end
@@ -57,6 +57,7 @@ const ±(val, err) = DataPoint(val, err)
 ## Convert DataPoint-types
 convert(::Type{DataPoint{T}}, D::DataPoint) where {T} = DataPoint{T}(T(D.val),T.(D.err))
 convert(::Type{DataPoint{T}}, D::DataPoint) where {T<:Integer} = DataPoint{T}(T(D.val),T.(ceil.(D.err)))
+convert(::Type{DataPoint{T}}, D::DataPoint) where {T} = DataPoint{T}(T(D.val),T.(D.err))
 
 ## DataPoint math
 Base.:/(D::DataPoint, s::T) where {T <: Number} = DataPoint(D.val/s,D.err/s)
