@@ -40,6 +40,16 @@ Returns a tuple with the lower and upper bound of this DatPoint.
 """
 #TODO: I would like to have an inverse function of that, but don't know how to implement it nicely and how to name it
 bounds(x::DataPoint) = @. x.val + (-1,1)*x.err
+"""
+    lower(x::DataPoint)
+Returns the lower bound of the data point.
+"""
+lower(x::DataPoint) = x.val - x.err[1]
+"""
+    upper(x::DataPoint)
+Returns the upper bound of the data point.
+"""
+upper(x::DataPoint) = x.val + x.err[2]
 # Helper functions
 _to_tuple(x::T where T<:Number) = (x,x)
 _to_tuple(x::Tuple) = promote(x...)
@@ -68,9 +78,11 @@ const ±(val, err) = DataPoint(val, err)
 const ±(val, err::NamedTuple) = DataPoint(val, (get(err,:lower,zero(val)), get(err,:upper,zero(val))))
 
 ## Convert DataPoint-types
-convert(::Type{DataPoint{T}}, D::DataPoint) where {T<:Number}    = DataPoint{T}(T(D.val),T.(D.err))
-convert(::Type{DataPoint{T}}, D::DataPoint) where {T<:Integer} = DataPoint{T}(T(D.val),T.(ceil.(D.err)))
-
+Base.convert(::Type{DataPoint{T}}, D::DataPoint) where {T<:Number}    = DataPoint{T}(T(D.val),T.(D.err))
+Base.convert(::Type{DataPoint{T}}, D::DataPoint) where {T<:Integer}   = DataPoint{T}(T(D.val),T.(ceil.(D.err)))
+Base.convert(::Type{DataPoint{T}}, x::U) where {T<:Number,U<:Number}  = DataPoint{T}(T(x))
+Base.promote_rule(::Type{Vector{DataPoint{T}}}, ::Type{Vector{T}}) where {T<:Number} = Vector{Number}
+Base.promote_rule(::Type{Vector{T}}, ::Type{Vector{DataPoint{T}}}) where {T<:Number} = Vector{Number}
 ## ErrorPropagation macro
 """
     @ErrorPropagation function derivative
@@ -131,9 +143,18 @@ end
 @OperatorErrorPropagation Base.:- (x,dx,y,dy)->sqrt(dx^2.0+dy^2.0)
 # sign-change
 Base.:-(D::DataPoint) = DataPoint(-D.val,D.err[[2,1]])
+Base.abs(D::DataPoint{T}) where {T} = (value(D) < zero(T) ? -D : D)
+Base.zero(D::DataPoint{T}) where {T} = DataPoint{T}()
+Base.isless(D1::DataPoint,D2::DataPoint) = Base.isless(value(D1),value(D2))
+Base.isless(D::DataPoint,x) = Base.isless(value(D),x)
+Base.isless(x,D::DataPoint) = Base.isless(x,value(D))
 # Math functions
 @ErrorPropagation Base.log (x,dx)->abs(dx/x)
 @ErrorPropagation Base.exp (x,dx)->abs(Base.exp(x)*dx)
+@ErrorPropagation Base.sin (x,dx)->abs(Base.cos(x)*dx)
+@ErrorPropagation Base.cos (x,dx)->abs(Base.sin(x)*dx)
+@ErrorPropagation Base.sinh (x,dx)->abs(Base.cosh(x)*dx)
+@ErrorPropagation Base.cosh (x,dx)->abs(Base.sinh(x)*dx)
 
 ## Pretty-printing
 # Printing of results

@@ -17,7 +17,7 @@ export
     theories,
     theory_name
 
-export DataPoint, ±, value, err, relerr, bounds
+export DataPoint, ±, value, err, relerr, bounds, lower, upper
 
 export @ErrorPropagation
 
