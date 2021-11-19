@@ -54,7 +54,7 @@ upper(x::DataPoint) = x.val + x.err[2]
 _to_tuple(x::T where T<:Number) = (x,x)
 _to_tuple(x::Tuple) = promote(x...)
 _to_tuple(x::T,y::U) where {T<:Number,U<:Number} = promote(x,y)
-_check_error_positivity(err) = all(x -> (π/2 >= angle(x)>=0), err)
+_check_error_positivity(err) = all(x -> isnan(x) || (π/2 >= angle(x)>=0), err)
 
 ## Constructors
 # default constructor               (calls immediately inner constructor)
@@ -66,7 +66,7 @@ DataPoint(x::T, lower, upper) where {T <: Number} = DataPoint{T}(x, err = _to_tu
 DataPoint(x::T; lower=zero(T), upper=zero(T)) where {T <: Number} = DataPoint{T}(x, err = _to_tuple(lower,upper))
 # type-safe keyword constructor     (calls inner constructor)
 function DataPoint{T}(x::T=zero(T); err=zero(T)) where {T <: Number}
-    @assert _check_error_positivity(err) "Only use positive uncertainties!"
+    #@assert _check_error_positivity(err) "Only use positive uncertainties!"
     err = _to_tuple(err)
     U = promote_type(typeof(x), eltype(err))
     DataPoint{U}(x,err)

@@ -11,8 +11,8 @@ using RecipesBase
             seriestype := st
             primary   := false
             linecolor := nothing
-            fillcolor := :red
-            fillalpha := 0.5
+            fillcolor --> :red
+            fillalpha --> 0.5
             fillrange := lower.(D)
             # ensure no markers are shown for the error band
             markershape := :none
@@ -31,8 +31,8 @@ end
             seriestype := st
             primary   := false
             linecolor := nothing
-            fillcolor := :red
-            fillalpha := 0.5
+            fillcolor --> :red
+            fillalpha --> 0.5
             fillrange := lower.(Dy)
             # ensure no markers are shown for the error band
             markershape := :none
@@ -51,8 +51,8 @@ end
             seriestype := st
             primary   := false
             linecolor := nothing
-            fillcolor := :red
-            fillalpha := 0.5
+            fillcolor --> :red
+            fillalpha --> 0.5
             fillrange := lower.(Dy)
             # ensure no markers are shown for the error band
             markershape := :none
