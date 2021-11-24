@@ -142,12 +142,18 @@ end
 @OperatorErrorPropagation Base.:+ (x,dx,y,dy)->sqrt(dx^2.0+dy^2.0)
 @OperatorErrorPropagation Base.:- (x,dx,y,dy)->sqrt(dx^2.0+dy^2.0)
 # sign-change
-Base.:-(D::DataPoint) = DataPoint(-D.val,D.err[[2,1]])
+Base.:-(D::DataPoint) = DataPoint(-D.val,reverse(D.err))
 Base.abs(D::DataPoint{T}) where {T} = (value(D) < zero(T) ? -D : D)
 Base.zero(D::DataPoint{T}) where {T} = DataPoint{T}()
 Base.isless(D1::DataPoint,D2::DataPoint) = Base.isless(value(D1),value(D2))
 Base.isless(D::DataPoint,x) = Base.isless(value(D),x)
 Base.isless(x,D::DataPoint) = Base.isless(x,value(D))
+function Base.sort(D::DataPoint)
+    d⁻, d, d⁺ = sort([value(D),bounds(D)...])
+    d⁻ = d - d⁻
+    d⁺ = d⁺ - d
+    DataPoint(d,d⁻,d⁺)
+end
 # Math functions
 @ErrorPropagation Base.log (x,dx)->abs(dx/x)
 @ErrorPropagation Base.exp (x,dx)->abs(Base.exp(x)*dx)
