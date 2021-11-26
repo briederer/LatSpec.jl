@@ -65,8 +65,8 @@ DataPoint(x::T, lower, upper) where {T <: Number} = DataPoint{T}(x, err = _to_tu
 # keyword constructor               (calls type-safe keyword constructor)
 DataPoint(x::T; lower=zero(T), upper=zero(T)) where {T <: Number} = DataPoint{T}(x, err = _to_tuple(lower,upper))
 # type-safe keyword constructor     (calls inner constructor)
-function DataPoint{T}(x::T=zero(T); err=zero(T)) where {T <: Number}
-    #@assert _check_error_positivity(err) "Only use positive uncertainties!"
+function DataPoint{T}(x::T=zero(T); err=zero(T), check::Bool = true) where {T <: Number}
+    check && @assert _check_error_positivity(err) "Only use positive uncertainties!"
     err = _to_tuple(err)
     U = promote_type(typeof(x), eltype(err))
     DataPoint{U}(x,err)
