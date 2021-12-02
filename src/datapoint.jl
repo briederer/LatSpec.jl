@@ -83,6 +83,7 @@ Base.convert(::Type{DataPoint{T}}, D::DataPoint) where {T<:Integer}   = DataPoin
 Base.convert(::Type{DataPoint{T}}, x::U) where {T<:Number,U<:Number}  = DataPoint{T}(T(x))
 Base.promote_rule(::Type{Vector{DataPoint{T}}}, ::Type{Vector{T}}) where {T<:Number} = Vector{Number}
 Base.promote_rule(::Type{Vector{T}}, ::Type{Vector{DataPoint{T}}}) where {T<:Number} = Vector{Number}
+Base.promote_rule(::Type{DataPoint{T}}, ::Type{U}) where {T<:Number,U<:Number} = DataPoint{T}
 ## ErrorPropagation macro
 """
     @ErrorPropagation function derivative
@@ -141,6 +142,7 @@ end
 @OperatorErrorPropagation Base.:* (x,dx,y,dy)->sqrt((x*dy)^2.0+(y*dx)^2.0)
 @OperatorErrorPropagation Base.:+ (x,dx,y,dy)->sqrt(dx^2.0+dy^2.0)
 @OperatorErrorPropagation Base.:- (x,dx,y,dy)->sqrt(dx^2.0+dy^2.0)
+@OperatorErrorPropagation Base.:^ (x,dx,y,dy)->sqrt((y*x^(y-1.0)*dx)^2.0+(x^y*Base.log(x)*dy)^2.0)
 # sign-change
 Base.:-(D::DataPoint) = DataPoint(-D.val,reverse(D.err))
 Base.abs(D::DataPoint{T}) where {T} = (value(D) < zero(T) ? -D : D)
@@ -155,8 +157,11 @@ function Base.sort(D::DataPoint)
     DataPoint(d,d⁻,d⁺)
 end
 # Math functions
+@ErrorPropagation Base.real (x,dx)->real(dx)
+@ErrorPropagation Base.imag (x,dx)->imag(dx)
 @ErrorPropagation Base.log (x,dx)->abs(dx/x)
 @ErrorPropagation Base.exp (x,dx)->abs(Base.exp(x)*dx)
+@ErrorPropagation Base.sqrt (x,dx)->abs(dx/(2*Base.sqrt(x)))
 @ErrorPropagation Base.sin (x,dx)->abs(Base.cos(x)*dx)
 @ErrorPropagation Base.cos (x,dx)->abs(Base.sin(x)*dx)
 @ErrorPropagation Base.sinh (x,dx)->abs(Base.cosh(x)*dx)
