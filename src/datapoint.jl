@@ -84,6 +84,7 @@ Base.convert(::Type{DataPoint{T}}, x::U) where {T<:Number,U<:Number}  = DataPoin
 Base.promote_rule(::Type{Vector{DataPoint{T}}}, ::Type{Vector{T}}) where {T<:Number} = Vector{Number}
 Base.promote_rule(::Type{Vector{T}}, ::Type{Vector{DataPoint{T}}}) where {T<:Number} = Vector{Number}
 Base.promote_rule(::Type{DataPoint{T}}, ::Type{U}) where {T<:Number,U<:Number} = DataPoint{T}
+Base.Complex(D::DataPoint{T}) where {T<:Number} = DataPoint(Complex(D.val), Complex.(D.err))
 ## ErrorPropagation macro
 """
     @ErrorPropagation function derivative
@@ -166,6 +167,8 @@ end
 @ErrorPropagation Base.cos (x,dx)->abs(Base.sin(x)*dx)
 @ErrorPropagation Base.sinh (x,dx)->abs(Base.cosh(x)*dx)
 @ErrorPropagation Base.cosh (x,dx)->abs(Base.sinh(x)*dx)
+@ErrorPropagation Base.acosh (x,dx)->abs(dx/Base.sqrt(x^2-1))
+@ErrorPropagation Base.asinh (x,dx)->abs(dx/Base.sqrt(x^2+1))
 
 ## Pretty-printing
 # Printing of results
