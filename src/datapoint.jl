@@ -151,6 +151,7 @@ Base.zero(D::DataPoint{T}) where {T} = DataPoint{T}()
 Base.isless(D1::DataPoint,D2::DataPoint) = Base.isless(value(D1),value(D2))
 Base.isless(D::DataPoint,x) = Base.isless(value(D),x)
 Base.isless(x,D::DataPoint) = Base.isless(x,value(D))
+Base.isnan(D::DataPoint) = all(Base.isnan(value(D)) && Base.isnan.(err(D)))
 function Base.sort(D::DataPoint)
     d⁻, d, d⁺ = sort([value(D),bounds(D)...])
     d⁻ = d - d⁻
