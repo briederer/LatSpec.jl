@@ -44,6 +44,7 @@ end
 
 @recipe function plotDataPoint(Dx::AbstractArray{<:DataPoint}, Dy::AbstractArray{<:DataPoint})
     xerror := err.(Dx)
+    st = get(plotattributes,:seriestype,:path)
     if st == :scatter
         yerror := err.(Dy)
     else
