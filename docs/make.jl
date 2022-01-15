@@ -5,6 +5,7 @@ using LatSpec
 bib = CitationBibliography(joinpath(@__DIR__,"LatSpec.bib"))
 const PAGES = [
                "Home"       => "index.md",
+               "API"        => "api.md",
                "References" => "references.md"
               ]
 

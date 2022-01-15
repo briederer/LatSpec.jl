@@ -1,1 +1,1 @@
-# LatSpec
+docs/src/index.md

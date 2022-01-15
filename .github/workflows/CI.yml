@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - master
+    tags: '*'
 jobs:
   test:
     name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
@@ -14,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - '1.5'
+          - '1.6'
           - '1'
           - 'nightly'
         os:
@@ -41,11 +42,11 @@ jobs:
             ${{ runner.os }}-
       - uses: julia-actions/julia-buildpkg@latest
       - uses: julia-actions/julia-runtest@latest
-      # No Codecov yet
-      #- uses: julia-actions/julia-processcoverage@v1
-      #- uses: codecov/codecov-action@v1
-      #  with:
-      #    file: lcov.info
+      # Codecov
+      - uses: julia-actions/julia-processcoverage@v1
+      - uses: codecov/codecov-action@v1
+        with:
+          file: lcov.info
   docs:
     name: Documentation
     runs-on: ubuntu-latest
@@ -54,19 +55,61 @@ jobs:
       - uses: julia-actions/setup-julia@v1
         with:
           version: '1'
-      - run: |
+      - name: Instantiate Package
+        run: |
           julia --project=docs -e '
             import Pkg; Pkg.add("Documenter")
             using Pkg
             Pkg.develop(Pkg.PackageSpec(path=pwd()))
             Pkg.instantiate()'
-      - run: |
+      - name: Test Docs
+        run: |
           julia --project=docs -e '
             import Pkg; Pkg.add("Documenter")
             using Documenter: doctest
             using LatSpec
             doctest(LatSpec)'
-      - run: julia --project=docs docs/make.jl
+      - name: Create and deploy Docs
+        run: julia --project=docs docs/make.jl
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}
+      - name: Post Docs-link to PR
+        if: ${{ github.event_name == 'pull_request'}}
+        uses: mshick/add-pr-comment@v1
+        with:
+          message: |
+            **The Docs for this PR are deployed!** 🥳
+            You can find them [here](https://bernd1995.github.io/LatSpec.jl/previews/PR${{ github.event.number }}).
+
+            Please make sure that you have documented your new feature properly:
+              - [ ] Added documentation (if needed).
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token-user-login: 'github-actions[bot]'
+          allow-repeats: false # This is the default
+      - name: Checkout gh-pages branch
+        if: "contains(env.COMMIT_MSG, '#')"   # only filled on push not on pr
+        uses: actions/checkout@v2
+        with:
+          ref: gh-pages
+        env:
+          COMMIT_MSG: ${{ github.event.commits[0].message }}
+      - name: Cleanup Docs branch
+        if: "contains(env.COMMIT_MSG, '#')"   # only filled on push not on pr
+        run: |
+          git config user.name "LatSpec.jl-Documenter"
+          git config user.email "20151553+bernd1995@users.noreply.github.com"
+          for i in `sed -re 's/[^#]*#*([^ )\,]*)/\1 /g' <<< "$COMMIT_MSG"`
+          do
+            git rm -rfq --ignore-unmatch "previews/PR$i"
+          done
+          git commit --allow-empty -m "Delete previews"
+          git branch gh-pages-new $(echo "Delete history" | git commit-tree HEAD^{tree})
+        env:
+          COMMIT_MSG: ${{ github.event.commits[0].message }}
+      - name: Push changes
+        if: "contains(env.COMMIT_MSG, '#')"   # only filled on push not on pr
+        run: |
+          git push --force origin gh-pages-new:gh-pages
+        env:
+          COMMIT_MSG: ${{ github.event.commits[0].message }}
