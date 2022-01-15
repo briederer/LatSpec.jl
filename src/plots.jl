@@ -8,22 +8,22 @@ http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US
 """
 @userplot SeriesHistogram
 
-@recipe function f(h::SeriesHistogram; xlabel1 = "", xlabel2 = "") # define extra keywords to use in the plotting
+@recipe function f(h::SeriesHistogram; yticks1 = :auto, yticks2 = :none, xlabel1 = "", xlabel2 = "", ylabel1 = "", ylabel2 = "") # define extra keywords to use in the plotting
     mat = h.args[1]
 
     legend := false # specify the plot attributes
     link := :y
     grid := false
-    layout := grid(1, 2, widths = [0.7, 0.3])
+    layout := RecipesBase.grid(1, 2, widths = [0.7, 0.3])
 
     @series begin         # send the different data to the different subplots
         subplot := 2
         seriestype := :histogram
         orientation := :h
-        xguide := xlabel2
         title  := ""
-        yguide := ""
-        yticks := :none
+        xguide := xlabel2
+        yguide := ylabel2
+        yticks := yticks2
         mat
     end
 
@@ -31,6 +31,7 @@ http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US
     linealpha --> 1.0
     seriestype := :path
     xguide := xlabel1
-    yguide := ""
+    yguide := ylabel1
+    yticks := yticks1
     mat
 end
