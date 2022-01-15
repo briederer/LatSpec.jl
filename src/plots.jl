@@ -6,6 +6,16 @@ modifed version of https://discourse.julialang.org/t/plotting-histogram-on-the-y
 Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
 http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US
 """
+
+"""
+    serieshistogram(x; xlabel1,xlabel2,ylabel1,ylabel2,yticks1,yticks2)
+
+Plot both the series `x` and a histogram of `x`. The labels and ticks  of the
+time series are exposed via the options `xlabel1`,`ylabel1` and `yticks1`. The
+same options are exposed for the histogram through `xlabel2`,`ylabel2` and
+`yticks2`.
+
+"""
 @userplot SeriesHistogram
 
 @recipe function f(h::SeriesHistogram; yticks1 = :auto, yticks2 = :none, xlabel1 = "", xlabel2 = "", ylabel1 = "", ylabel2 = "") # define extra keywords to use in the plotting
